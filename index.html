@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>Menu</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <ul class="sidebar-links">
+                <li><a href="#" class="sidebar-link active" data-filter="add"><i class="icon"></i>Add Task</a></li>
+                <li><a href="#" class="sidebar-link" data-filter="active"><i class="icon"></i>Active</a></li>
+                <li><a href="#" class="sidebar-link" data-filter="completed"><i class="icon"></i>Completed</a></li>
+                <li><a href="#" class="sidebar-link" data-filter="due-tasks"><i class="icon"></i>Due Tasks</a></li>
+                <li><a href="#" class="sidebar-link" data-filter="all"><i class="icon"></i>All Tasks</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <header class="dashboard-header">
+                <button class="menu-toggle-btn">&#9776;</button>
+                <h1>My Dashboard</h1>
+                <button id="theme-toggle-btn">&#127769;</button> <!-- Moon icon -->
+            </header>
+            <div class="todo-widget">
+                <div class="widget-header">
+                    <h3 id="main-header-title">Today's Tasks</h3>
+                    <button id="clear-tasks-btn">Clear All</button>
+                </div>
+                <div class="input-container">
+                    <div class="input-group">
+                        <label for="task-input" id="task-label">Task</label>
+                        <input type="text" id="task-input" placeholder="Add a new task...">
+                    </div>
+                    <div class="input-group">
+                        <label for="due-date-input">Due Date</label>
+                        <input type="date" id="due-date-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="due-time-input">Due Time</label>
+                        <input type="time" id="due-time-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="priority-input">Priority</label>
+                        <select id="priority-input">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <button id="add-task-btn">Add</button>
+                </div>
+                <ul id="task-list"></ul>
+                <div class="task-info">
+                    <span id="tasks-left">0 tasks left</span>
+                </div>
+            </div>
+        </main>
+    </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal-overlay">
+        <div class="modal">
+            <h4>Delete Task</h4>
+            <p>Are you sure you want to delete this task? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="cancel-delete-btn">Cancel</button>
+                <button id="confirm-delete-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
