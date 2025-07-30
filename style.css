@@ -437,53 +437,6 @@ body.dark-mode {
     color: var(--text-color);
 }
 
-/* Task Category Styles */
-.task-category {
-    margin-bottom: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.category-header {
-    padding: 12px 15px;
-    background-color: var(--sidebar-bg);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.3s;
-}
-
-.category-header:hover {
-    background-color: var(--bg-color);
-}
-
-.category-header h3 {
-    font-size: 1rem; /* Smaller font size */
-    font-weight: 500; /* Not as bold */
-    margin: 0;
-}
-
-.toggle-icon {
-    transition: transform 0.3s ease;
-}
-
-.task-category.open .toggle-icon {
-    transform: rotate(180deg);
-}
-
-.task-sublist {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: none; /* Collapsed by default */
-}
-
-.task-category.open .task-sublist {
-    display: block; /* Expanded when open */
-}
-
 #clear-tasks-btn {
     background: transparent;
     color: var(--text-color);
@@ -500,12 +453,6 @@ body.dark-mode {
     background: #e74c3c;
     color: white;
     border-color: #e74c3c;
-}
-
-
-
-#clear-completed-btn:hover {
-    background: #c0392b;
 }
 
 /* Accordion Styles */
@@ -568,10 +515,10 @@ body.dark-mode {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2000;
+    z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .modal-overlay.show {
@@ -580,23 +527,57 @@ body.dark-mode {
 }
 
 .modal {
-    background: var(--widget-bg);
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    background: var(--bg-color);
+    padding: 25px 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transform: translateY(-20px) scale(0.95);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.widget-header h3 {
-    margin: 0;
-    font-size: 24px;
+.modal-overlay.show .modal {
+    transform: translateY(0) scale(1);
+}
+
+.modal-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.modal-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.modal-icon.icon-warning {
+    color: #f39c12;
+}
+
+.modal-icon.icon-danger {
+    color: #e74c3c;
+}
+
+.modal-icon.icon-info {
+    color: var(--primary-color);
+}
+
+.modal-title {
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--text-color);
-    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    margin: 0;
 }
 
-.modal p {
-    color: var(--text-color);
+.modal-message {
     margin-bottom: 25px;
+    color: var(--text-secondary-color);
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 .modal-actions {
@@ -606,22 +587,59 @@ body.dark-mode {
 }
 
 .modal-actions button {
-    padding: 10px 20px;
+    padding: 12px 25px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.2s, transform 0.2s;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
 
-#cancel-delete-btn {
-    background-color: #555;
-    color: #fff;
+.modal-actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-#confirm-delete-btn {
-    background-color: var(--button-bg);
-    color: var(--button-text-color);
+.modal-actions .btn-secondary {
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.modal-actions .btn-secondary:hover {
+    background-color: var(--bg-color);
+}
+
+.modal-actions .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.modal-actions .btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.modal-actions .btn-danger:hover {
+    background-color: #c0392b;
+}
+
+/* Footer Styles */
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+/* Custom Alert Modal Styles */
+#alert-ok-btn {
+    background-color: var(--primary-color);
+    color: white;
 }
 
 @keyframes fadeIn {
@@ -660,4 +678,20 @@ body.dark-mode {
     .todo-widget {
         padding: 15px;
     }
+}
+
+/* Footer Styles */
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+/* Custom Alert Modal Styles */
+#alert-ok-btn {
+    background-color: var(--primary-color);
+    color: white;
 }

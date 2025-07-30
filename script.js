@@ -19,9 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskLabel = document.getElementById('task-label');
 
     // Modal Elements
-    const deleteModal = document.getElementById('delete-modal');
-    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
-    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    const customModal = document.getElementById('custom-modal');
+    const modalIcon = customModal.querySelector('.modal-icon');
+    const modalTitle = customModal.querySelector('.modal-title');
+    const modalMessage = customModal.querySelector('.modal-message');
+    const modalActions = customModal.querySelector('.modal-actions');
 
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let currentFilter = 'add';
@@ -83,12 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const editBtn = document.createElement('button');
         editBtn.innerHTML = '&#9998;'; // Pencil icon
         editBtn.className = 'edit-btn';
-        // Event listener for edit button is now in the main taskList listener
 
         const deleteBtn = document.createElement('button');
         deleteBtn.innerHTML = '&#128465;'; // Trash icon
         deleteBtn.className = 'delete-btn';
-        // Event listener for delete button is now in the main taskList listener
 
         taskActionsDiv.appendChild(editBtn);
         taskActionsDiv.appendChild(deleteBtn);
@@ -133,14 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
         taskList.innerHTML = '';
         const now = new Date();
 
-        // Helper function to check if a task is overdue
         const isTaskOverdue = (task) => {
             if (!task.dueDate) return false;
             const dueDateTime = new Date(`${task.dueDate}T${task.dueTime || '23:59:59'}`);
             return dueDateTime < now;
         };
 
-        // Always categorize tasks, but filter which categories are shown
         const activeTasks = tasks.filter(t => !t.completed && !isTaskOverdue(t));
         const dueTasks = tasks.filter(t => !t.completed && isTaskOverdue(t));
         const completedTasks = tasks.filter(t => t.completed);
@@ -149,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (taskArray.length === 0) return;
 
             const categoryDiv = document.createElement('div');
-            categoryDiv.className = 'task-category open'; // Default to open
+            categoryDiv.className = 'task-category open';
 
             const header = document.createElement('div');
             header.className = 'category-header';
@@ -165,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
             taskList.appendChild(categoryDiv);
         };
 
-        // Display categories based on the current filter
         if (currentFilter === 'all' || currentFilter === 'add') {
             createCategory('Active Tasks', activeTasks);
             createCategory('Due Tasks', dueTasks);
@@ -188,10 +185,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const dueTime = dueTimeInput.value;
         const priority = priorityInput.value;
 
-        if (!text) return;
+        if (!text) {
+            showModal({
+                icon: '&#9888;',
+                iconClass: 'icon-warning',
+                title: 'Oops!',
+                message: 'Task description cannot be empty. Please enter some text.',
+                buttons: [
+                    { text: 'OK', class: 'btn-primary', action: hideModal }
+                ]
+            });
+            return;
+        }
 
         if (taskToEditId !== null) {
-            // Update existing task
             const task = tasks.find(t => t.id === taskToEditId);
             if (task) {
                 task.text = text;
@@ -202,14 +209,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             taskToEditId = null;
             addTaskBtn.textContent = 'Add';
-            taskLabel.textContent = 'Task'; // Reset label
+            taskLabel.textContent = 'Task';
         } else {
-            // Add new task
             tasks.push({ id: Date.now(), text, completed: false, dueDate, dueTime, priority });
             saveTasks();
         }
 
-        // Reset form and re-render
         taskInput.value = '';
         dueDateInput.value = '';
         dueTimeInput.value = '';
@@ -228,7 +233,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function deleteTask(id) {
         taskToDelete = id;
-        deleteModal.classList.add('show');
+        showModal({
+            icon: '&#128465;',
+            iconClass: 'icon-danger',
+            title: 'Confirm Deletion',
+            message: 'Are you sure you want to delete this task? This action cannot be undone.',
+            buttons: [
+                { text: 'Cancel', class: 'btn-secondary', action: hideModal },
+                { text: 'Delete', class: 'btn-danger', action: confirmDelete }
+            ]
+        });
     };
 
     const editTask = (id) => {
@@ -245,8 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-
-
     // --- Event Listeners --- //
     menuToggleBtn.addEventListener('click', () => {
         sidebar.classList.add('open');
@@ -260,9 +272,6 @@ document.addEventListener('DOMContentLoaded', () => {
     taskInput.addEventListener('keypress', (e) => e.key === 'Enter' && handleAddOrUpdate());
 
     clearTasksBtn.addEventListener('click', () => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
         switch (currentFilter) {
             case 'add':
             case 'all':
@@ -275,14 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tasks = tasks.filter(task => !task.completed);
                 break;
             case 'due-tasks':
-                tasks = tasks.filter(task => {
-                    const isTaskOverdue = (t) => {
-                        if (!t.dueDate) return false;
-                        const dueDateTime = new Date(`${t.dueDate}T${t.dueTime || '23:59:59'}`);
-                        return dueDateTime < now;
-                    };
-                    return task.completed || !isTaskOverdue(task);
-                });
+                tasks = tasks.filter(task => task.completed || !isTaskOverdue(task));
                 break;
         }
         saveTasks();
@@ -310,7 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const newFilter = link.dataset.filter;
 
-            // Update header with animation
             mainHeaderTitle.style.opacity = '0';
             mainHeaderTitle.style.transform = 'translateY(-10px)';
 
@@ -336,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 mainHeaderTitle.style.opacity = '1';
                 mainHeaderTitle.style.transform = 'translateY(0)';
-            }, 200); // Should be less than the CSS transition duration
+            }, 200);
 
             filterLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
@@ -352,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Theme Toggle --- //
     const applyTheme = (theme) => {
         document.body.classList.toggle('dark-mode', theme === 'dark');
-        themeToggleBtn.innerHTML = theme === 'dark' ? '&#9728;' : '&#127769;'; // Sun/Moon icon
+        themeToggleBtn.innerHTML = theme === 'dark' ? '&#9728;' : '&#127769;';
         localStorage.setItem('theme', theme);
     };
 
@@ -362,13 +363,30 @@ document.addEventListener('DOMContentLoaded', () => {
         applyTheme(newTheme);
     });
 
-    // --- Initial Load --- //
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    applyTheme(savedTheme);
-    renderTasks();
+    // --- Modal Logic ---
+    const showModal = ({ icon, iconClass, title, message, buttons }) => {
+        modalIcon.innerHTML = icon;
+        modalIcon.className = `modal-icon ${iconClass}`;
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
 
-    // --- Modal Event Listeners ---
-    confirmDeleteBtn.addEventListener('click', () => {
+        modalActions.innerHTML = ''; // Clear previous buttons
+        buttons.forEach(btnInfo => {
+            const button = document.createElement('button');
+            button.textContent = btnInfo.text;
+            button.className = btnInfo.class;
+            button.addEventListener('click', btnInfo.action);
+            modalActions.appendChild(button);
+        });
+
+        customModal.classList.add('show');
+    };
+
+    const hideModal = () => {
+        customModal.classList.remove('show');
+    };
+
+    const confirmDelete = () => {
         if (taskToDelete !== null) {
             const taskElement = document.querySelector(`[data-id='${taskToDelete}']`);
             if (taskElement) {
@@ -381,18 +399,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 400);
             }
         }
-        deleteModal.classList.remove('show');
-    });
+        hideModal();
+    };
 
-    cancelDeleteBtn.addEventListener('click', () => {
-        taskToDelete = null;
-        deleteModal.classList.remove('show');
-    });
-
-    deleteModal.addEventListener('click', (e) => {
-        if (e.target === deleteModal) {
-            taskToDelete = null;
-            deleteModal.classList.remove('show');
+    customModal.addEventListener('click', (e) => {
+        if (e.target === customModal) {
+            hideModal();
         }
     });
+
+    // --- Initial Load ---
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+    renderTasks();
 });
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+    renderTasks();

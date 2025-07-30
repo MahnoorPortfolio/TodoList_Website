@@ -64,18 +64,23 @@
                     <span id="tasks-left">0 tasks left</span>
                 </div>
             </div>
+            <footer class="site-footer">
+                <p>&copy; 2025 MahnoorPortfolio. All Rights Reserved.</p>
+            </footer>
         </main>
     </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div id="delete-modal" class="modal-overlay">
+    <!-- Generic Modal Structure (will be populated by JS) -->
+    <div id="custom-modal" class="modal-overlay">
         <div class="modal">
-            <h4>Delete Task</h4>
-            <p>Are you sure you want to delete this task? This action cannot be undone.</p>
+            <div class="modal-header">
+                <span class="modal-icon"></span>
+                <h4 class="modal-title"></h4>
+            </div>
+            <p class="modal-message"></p>
             <div class="modal-actions">
-                <button id="cancel-delete-btn">Cancel</button>
-                <button id="confirm-delete-btn">Delete</button>
+                <!-- Buttons will be added here by JS -->
             </div>
         </div>
     </div>

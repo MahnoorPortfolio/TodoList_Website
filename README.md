@@ -12,6 +12,8 @@ This is a feature-rich, interactive to-do list application built with HTML, CSS,
 *   **Persistent Storage:** Tasks are saved in your browser's local storage, so you won't lose your data.
 *   **Modern UI:** A clean and intuitive interface with a collapsible sidebar and a dark mode option.
 *   **Responsive Design:** The application is designed to work well on different screen sizes.
+*   **Custom Alerts:** Replaced default browser alerts with a styled, custom modal for a more integrated user experience.
+*   **Footer:** Includes a clean and simple footer with copyright information.
 
 ## Built With
 
